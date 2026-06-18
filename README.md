@@ -1,0 +1,47 @@
+# Clip Logger
+
+A small Windows tray app for collecting debug context while you work. Press
+**Ctrl+Alt+C** to capture the currently-selected text into a dated `.txt` log
+file, with timestamps and separators between entries. Normal `Ctrl+C` is
+untouched.
+
+## Features
+
+- Global hotkey capture (`Ctrl+Alt+C`) — normal copy/paste unaffected
+- Dated log files: `cliplog-YYYY-MM-DD_HH-mm.txt` in a folder you choose
+- Each entry: timestamp + your text + 4 blank lines + a dashed separator
+- Tray menu: New File, Stop/Start logging, Open Log Folder, Settings, Exit
+- Configurable check-in interval (default 60 min) prompting Continue / New File
+- Optional auto-start on login (per-user) — installer checkbox + Settings toggle
+- Inno Setup installer (`ClipLogger-Setup.exe`), self-contained (no .NET needed)
+
+## Project layout
+
+- `src/ClipLogger.Core` — platform-neutral, fully unit-tested logic
+- `src/ClipLogger.App` — WinForms tray app (hotkey, clipboard, settings)
+- `tests/ClipLogger.Tests` — xUnit tests for Core
+- `installer/ClipLogger.iss` — Inno Setup script
+
+## Build & test
+
+```
+dotnet build
+dotnet test
+dotnet run --project src/ClipLogger.App
+```
+
+## Build the installer
+
+```
+dotnet publish src/ClipLogger.App/ClipLogger.App.csproj -c Release -r win-x64 --self-contained true -o installer/app
+"%LOCALAPPDATA%\Programs\Inno Setup 6\ISCC.exe" installer\ClipLogger.iss
+```
+
+The installer is produced at `installer/Output/ClipLogger-Setup.exe`.
+
+## Notes / trade-offs
+
+- Captures selected **text** only (no images). A few apps that ignore a
+  simulated `Ctrl+C` (some terminals, protected fields) won't capture.
+- `Ctrl+Alt+C` leaves the captured text on the clipboard (by design).
+- Logs are plain text on disk — avoid capturing secrets into them.
