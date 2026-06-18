@@ -22,34 +22,51 @@ public static class ClipboardCapture
     private const ushort VK_MENU = 0x12; // Alt
     private const ushort VK_C = 0x43;
 
-    /// <summary>Simulates Ctrl+C in the focused window and returns the resulting clipboard text, or null.</summary>
+    /// <summary>
+    /// Copies the currently-selected text in the focused window and returns it.
+    /// Returns null if nothing was actually copied (no selection, or the target
+    /// ignores a simulated Ctrl+C) — in that case the previous clipboard is restored.
+    /// </summary>
     public static string? CaptureSelectedText()
     {
-        SendCleanCtrlC();
-        Thread.Sleep(120); // let the target app populate the clipboard
+        // Snapshot the existing clipboard so we can (a) detect a real change and
+        // (b) restore it if the copy produces nothing.
+        var previous = SafeGetText();
 
-        if (Clipboard.ContainsText())
+        // Clear first: this is what makes a failed copy detectable instead of us
+        // silently returning whatever stale text was already on the clipboard.
+        SafeClear();
+
+        SendCleanCtrlC();
+
+        // Condition-based wait: poll until the selection actually lands on the
+        // clipboard, up to ~1.2s. Most apps respond within ~50-150ms.
+        for (int i = 0; i < 24; i++)
         {
-            var t = Clipboard.GetText();
-            return string.IsNullOrEmpty(t) ? null : t;
+            Thread.Sleep(50);
+            var text = SafeGetText();
+            if (!string.IsNullOrEmpty(text))
+                return text; // selection captured (and remains on the clipboard — Option A)
         }
+
+        // Nothing new was copied — put the user's original clipboard back and report failure.
+        if (!string.IsNullOrEmpty(previous))
+            SafeSetText(previous);
         return null;
     }
 
-    // The hotkey is Ctrl+Alt+C, so Ctrl and Alt are physically held. Release Alt first so the
-    // target sees a clean Ctrl+C (Alt held would make it Ctrl+Alt+C and break copy in many apps).
+    // The hotkey is Ctrl+Alt+C, so Ctrl and Alt are physically held when this runs.
+    // Release BOTH so the target sees a clean Ctrl+C (a lingering Alt makes the target
+    // read it as Ctrl+Alt+C, which is not a copy), then issue a fresh Ctrl+C.
     private static void SendCleanCtrlC()
     {
-        var inputs = new[]
-        {
-            Key(VK_MENU, true),     // Alt up
-            Key(VK_CONTROL, false), // Ctrl down
-            Key(VK_C, false),       // C down
-            Key(VK_C, true),        // C up
-            Key(VK_CONTROL, true),  // Ctrl up
-        };
-        SendInput((uint)inputs.Length, inputs, Marshal.SizeOf<INPUT>());
+        SendInputs(Key(VK_MENU, true), Key(VK_CONTROL, true)); // Alt up, Ctrl up
+        Thread.Sleep(40);                                      // let the modifier release settle
+        SendInputs(Key(VK_CONTROL, false), Key(VK_C, false), Key(VK_C, true), Key(VK_CONTROL, true));
     }
+
+    private static void SendInputs(params INPUT[] inputs)
+        => SendInput((uint)inputs.Length, inputs, Marshal.SizeOf<INPUT>());
 
     private static INPUT Key(ushort vk, bool up) => new INPUT
     {
@@ -66,4 +83,33 @@ public static class ClipboardCapture
             }
         }
     };
+
+    // Clipboard can be momentarily locked by another process; retry a few times.
+    private static string? SafeGetText()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            try { return Clipboard.ContainsText() ? Clipboard.GetText() : null; }
+            catch { Thread.Sleep(20); }
+        }
+        return null;
+    }
+
+    private static void SafeClear()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            try { Clipboard.Clear(); return; }
+            catch { Thread.Sleep(20); }
+        }
+    }
+
+    private static void SafeSetText(string text)
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            try { Clipboard.SetText(text); return; }
+            catch { Thread.Sleep(20); }
+        }
+    }
 }
