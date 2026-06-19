@@ -26,7 +26,9 @@ public class TrayApplicationContext : ApplicationContext
 
         _hotkey = new HotkeyManager();
         _hotkey.HotkeyPressed += OnHotkey;
-        if (!_hotkey.Register())
+        var registered = _hotkey.Register();
+        DebugLog.Write($"startup: RegisterHotKey(Ctrl+Alt+C) = {registered}; logFolder = {_config.LogFolder}");
+        if (!registered)
         {
             MessageBox.Show(
                 "Could not register Ctrl+Alt+C - another application may already be using it.",
