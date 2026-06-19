@@ -42,6 +42,37 @@ public class LogWriterTests
     }
 
     [Fact]
+    public void Append_IncrementsEntryCount_AndNewFileResetsIt()
+    {
+        var dir = TempDir();
+        try
+        {
+            var w = new LogWriter(dir, () => new DateTime(2026, 6, 18, 14, 32, 5));
+            Assert.Equal(0, w.EntryCount);
+            w.Append("one");
+            w.Append("two");
+            Assert.Equal(2, w.EntryCount);
+            w.StartNewFile();
+            Assert.Equal(0, w.EntryCount);
+        }
+        finally { if (Directory.Exists(dir)) Directory.Delete(dir, true); }
+    }
+
+    [Fact]
+    public void Append_WithSource_WritesSourceInEntry()
+    {
+        var dir = TempDir();
+        try
+        {
+            var w = new LogWriter(dir, () => new DateTime(2026, 6, 18, 14, 32, 5));
+            w.Append("captured text", "Notepad");
+            var content = File.ReadAllText(w.CurrentFilePath);
+            Assert.Contains("(from: Notepad)", content);
+        }
+        finally { if (Directory.Exists(dir)) Directory.Delete(dir, true); }
+    }
+
+    [Fact]
     public void StartNewFile_ResetsStartedTime()
     {
         var dir = TempDir();

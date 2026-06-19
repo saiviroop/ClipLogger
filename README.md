@@ -8,9 +8,15 @@ untouched.
 ## Features
 
 - Global hotkey capture (`Ctrl+Alt+C`) — normal copy/paste unaffected
+- **Live viewer** (`Ctrl+Alt+V` or tray → Open Viewer): auto-refreshing window
+  with a case-insensitive search/filter box
+- **Source tracking**: each entry records which app/window the text came from,
+  e.g. `[2026-06-19 11:30:00]  (from: chrome — GitHub)`
 - Dated log files: `cliplog-YYYY-MM-DD_HH-mm.txt` in a folder you choose
 - Each entry: timestamp + your text + 4 blank lines + a dashed separator
-- Tray menu: New File, Stop/Start logging, Open Log Folder, Settings, Exit
+- Distinct tray icon + live tooltip showing the entry count and logging state
+- Tray menu: Open Viewer, New File, Stop/Start logging, Open Log Folder,
+  Settings, Exit
 - Configurable check-in interval (default 60 min) prompting Continue / New File
 - Optional auto-start on login (per-user) — installer checkbox + Settings toggle
 - Inno Setup installer (`ClipLogger-Setup.exe`), self-contained (no .NET needed)

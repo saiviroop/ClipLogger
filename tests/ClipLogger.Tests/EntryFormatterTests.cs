@@ -24,4 +24,20 @@ public class EntryFormatterTests
     {
         Assert.Equal(new string('-', 40), EntryFormatter.Separator);
     }
+
+    [Fact]
+    public void Format_WithSource_AddsFromSuffixToHeader()
+    {
+        var nl = Environment.NewLine;
+        var result = EntryFormatter.Format(new DateTime(2026, 6, 18, 14, 32, 5), "hello", "Notepad");
+        Assert.StartsWith($"[2026-06-18 14:32:05]  (from: Notepad){nl}hello", result);
+    }
+
+    [Fact]
+    public void Format_WithBlankSource_OmitsFromSuffix()
+    {
+        var result = EntryFormatter.Format(new DateTime(2026, 6, 18, 14, 32, 5), "hello", "   ");
+        Assert.StartsWith("[2026-06-18 14:32:05]", result);
+        Assert.DoesNotContain("(from:", result);
+    }
 }

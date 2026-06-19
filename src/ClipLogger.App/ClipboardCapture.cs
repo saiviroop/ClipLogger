@@ -128,6 +128,18 @@ public static class ClipboardCapture
         catch { return "<unavailable>"; }
     }
 
+    /// <summary>Title of the currently-foreground window (the app text is being copied from).</summary>
+    public static string ActiveWindowTitle()
+    {
+        try
+        {
+            var title = new StringBuilder(256);
+            GetWindowText(GetForegroundWindow(), title, title.Capacity);
+            return title.ToString().Trim();
+        }
+        catch { return ""; }
+    }
+
     private static string? SafeGetText()
     {
         for (int i = 0; i < 5; i++)
