@@ -20,6 +20,7 @@ ArchitecturesInstallIn64BitMode=x64compatible
 WizardStyle=modern
 
 [Tasks]
+Name: "desktopicon"; Description: "Create a &desktop shortcut"; GroupDescription: "Additional shortcuts:"
 Name: "startuplogon"; Description: "Start Clip Logger when I log in"; GroupDescription: "Startup options:"
 
 [Files]
@@ -27,6 +28,7 @@ Source: "app\*"; DestDir: "{app}"; Flags: recursesubdirs ignoreversion
 
 [Icons]
 Name: "{group}\Clip Logger"; Filename: "{app}\{#MyAppExe}"
+Name: "{autodesktop}\Clip Logger"; Filename: "{app}\{#MyAppExe}"; Tasks: desktopicon
 
 [Registry]
 ; Per-user auto-start; matches AutoStartManager (value name "ClipLogger", quoted exe path).
