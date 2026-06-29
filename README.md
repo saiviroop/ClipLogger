@@ -45,6 +45,16 @@ dotnet publish src/ClipLogger.App/ClipLogger.App.csproj -c Release -r win-x64 --
 
 The installer is produced at `installer/Output/ClipLogger-Setup.exe`.
 
+## Changelog
+
+### 1.1.0
+- **Fixed**: the check-in prompt could stack endlessly — once it had been open
+  for a minute it spawned a new copy every 60 s (a WinForms timer keeps firing
+  while a modal dialog pumps messages). A re-entrancy guard now ensures only one
+  check-in prompt is ever shown at a time.
+- Added an embedded application icon (`app.ico`) so the exe and desktop shortcut
+  show the clipboard glyph instead of the generic .NET icon.
+
 ## Notes / trade-offs
 
 - Captures selected **text** only (no images). A few apps that ignore a

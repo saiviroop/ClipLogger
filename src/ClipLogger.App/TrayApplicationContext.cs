@@ -18,6 +18,7 @@ public class TrayApplicationContext : ApplicationContext
     private readonly NotifyIcon _tray;
     private readonly HotkeyManager _hotkey;
     private readonly System.Windows.Forms.Timer _checkInTimer;
+    private readonly ReentrancyGuard _checkInPrompt = new();
     private readonly AutoStartManager _autoStart;
     private readonly Icon _icon;
     private LogWriter _writer;
@@ -159,11 +160,22 @@ public class TrayApplicationContext : ApplicationContext
         if (!CheckInScheduler.IsDue(_writer.CurrentFileStarted, DateTime.Now, _config.CheckInMinutes))
             return;
 
-        var msg = $"This log file has been active for {IntervalText.Describe(_config.CheckInMinutes)}.\n\n" +
-                  "Continue with it (Yes), or start a new file (No)?";
-        var result = MessageBox.Show(msg, "Clip Logger", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-        if (result == DialogResult.No) NewFile();
-        else _writer.ResetStartTime();
+        // MessageBox.Show pumps its own modal message loop, so the WinForms timer
+        // keeps firing Tick while the prompt is open. Without this guard a new
+        // dialog would stack on top every interval until the user answers.
+        if (!_checkInPrompt.TryEnter()) return;
+        try
+        {
+            var msg = $"This log file has been active for {IntervalText.Describe(_config.CheckInMinutes)}.\n\n" +
+                      "Continue with it (Yes), or start a new file (No)?";
+            var result = MessageBox.Show(msg, "Clip Logger", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.No) NewFile();
+            else _writer.ResetStartTime();
+        }
+        finally
+        {
+            _checkInPrompt.Exit();
+        }
     }
 
     private void UpdateTrayText()

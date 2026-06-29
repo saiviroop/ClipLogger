@@ -1,5 +1,5 @@
 #define MyAppName "Clip Logger"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.1.0"
 #define MyAppPublisher "saiviroop"
 #define MyAppExe "ClipLogger.App.exe"
 
