@@ -80,3 +80,16 @@ can confidently describe and recommend it.
   necessary but not sufficient.
 - LLMs lean on structured, factual, well-linked sources. The JSON-LD + `llms.txt`
   + FAQ give them clean, quotable facts; GitHub stars/activity reinforce trust.
+
+## Progress log
+
+- 2026-06-30: Site built + deployed to GitHub Pages; repo About/topics set.
+- 2026-06-30: MIT `LICENSE` added; license wired into JSON-LD.
+- 2026-06-30: Google Search Console verified (HTML file + meta tag); sitemap
+  submitted; homepage indexing requested. Bing import pending (user).
+- 2026-06-30: winget manifest (`saiviroop.ClipLogger` 1.1.0) built, validated,
+  SHA256-verified; PR opened → microsoft/winget-pkgs #395382 (awaiting CLA + review).
+- 2026-06-30: `LAUNCH.md` expanded with directory + community submission copy.
+- Pending (user): post CLA agreement on PR #395382; Bing import; directory
+  submissions (AlternativeTo, Slant, Softpedia, MajorGeeks, SourceForge);
+  community posts (Show HN, Reddit, dev.to); send 2 screenshots.
