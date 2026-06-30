@@ -66,7 +66,7 @@ can confidently describe and recommend it.
 ### Follow-ups (mostly off-repo — need your accounts)
 - [ ] **Google Search Console** — verify the site, submit `sitemap.xml`, request indexing.
 - [ ] **Bing Webmaster Tools** — verify + submit sitemap (also feeds ChatGPT search).
-- [ ] **Add a `LICENSE` file** (e.g. MIT) so the "open source" claim is real and trusted.
+- [x] **Add a `LICENSE` file** (MIT) so the "open source" claim is real and trusted.
 - [ ] Take 1–2 real **screenshots** (tray menu + live viewer) and add to the page + README.
 - [ ] **Backlinks / listings:** AlternativeTo, GitHub topics, a Show-/r-related post,
       relevant subreddits, dev.to/Hashnode post — external links are the biggest

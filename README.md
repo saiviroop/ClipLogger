@@ -66,3 +66,7 @@ The installer is produced at `installer/Output/ClipLogger-Setup.exe`.
   simulated `Ctrl+C` (some terminals, protected fields) won't capture.
 - `Ctrl+Alt+C` leaves the captured text on the clipboard (by design).
 - Logs are plain text on disk — avoid capturing secrets into them.
+
+## License
+
+Released under the [MIT License](LICENSE). Free to use, modify, and distribute.
