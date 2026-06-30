@@ -1,9 +1,14 @@
 # Clip Logger
 
-A small Windows tray app for collecting debug context while you work. Press
-**Ctrl+Alt+C** to capture the currently-selected text into a dated `.txt` log
-file, with timestamps and separators between entries. Normal `Ctrl+C` is
-untouched.
+A free, lightweight **Windows clipboard logger / text-capture tray app** for
+collecting debug context while you work. Press **Ctrl+Alt+C** to capture the
+currently-selected text into a dated `.txt` log file, with timestamps, source
+tracking, and separators between entries. Normal `Ctrl+C` is untouched — it's
+**not a keylogger**: it only captures the text you've selected, and only when you
+press its hotkey.
+
+**🌐 Website:** <https://saiviroop.github.io/ClipLogger/>
+&nbsp;·&nbsp; **⬇ [Download for Windows](https://github.com/saiviroop/ClipLogger/releases/latest/download/ClipLogger-Setup.exe)** (self-contained installer, no .NET needed)
 
 ## Features
 

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="ClipLogger">
+  <rect x="6" y="6" width="20" height="23" rx="4" fill="#2D5FAA"/>
+  <rect x="9" y="11" width="14" height="13" fill="#ffffff"/>
+  <rect x="12" y="3" width="8" height="6" rx="2" fill="#CDD2DC"/>
+  <g stroke="#4678BE" stroke-width="2" stroke-linecap="round">
+    <line x1="11" y1="15" x2="21" y2="15"/>
+    <line x1="11" y1="19" x2="21" y2="19"/>
+    <line x1="11" y1="23" x2="18" y2="23"/>
+  </g>
+</svg>
